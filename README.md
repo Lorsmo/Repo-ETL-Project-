@@ -537,20 +537,21 @@ engine.table_names()
 ```
     ['poverty', 'co_income']
 
-
-
-### Use pandas to load csv converted DataFrame into database
-
+* Use pandas to load csv converted DataFrame into database
 
 ```python
 poverty_df.to_sql(name='poverty', con=engine, if_exists='append', index=False)
+co_income.to_sql(name='co_income', con=engine, if_exists='append', index=True)
 ```
-
-### Confirm data has been added by querying the poverty table
-
-
+* Confirm data has been added by querying the poverty table
 ```python
 pd.read_sql_query('select * from poverty', con=engine).head()
 ```
 
+```ruby
+SELECT co_income.id, co_income.state, co_income.county, co_income.p_c_p_income, poverty.poverty_population
+FROM poverty
+JOIN co_income ON
+poverty.state_abbr=co_income.state and poverty.name_county=co_income.county;
+```
 
