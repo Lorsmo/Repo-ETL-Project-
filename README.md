@@ -541,9 +541,10 @@ engine.table_names()
 poverty_df.to_sql(name='poverty', con=engine, if_exists='append', index=False)
 co_income.to_sql(name='co_income', con=engine, if_exists='append', index=True)
 ```
-* Confirm data has been added by querying the poverty table
+* Confirm data has been added by querying the tables
 ```python
 pd.read_sql_query('select * from poverty', con=engine).head()
+pd.read_sql_query('select * from co_income', con=engine).head()
 ```
 * Join both tables on county name and state name
 ```ruby
