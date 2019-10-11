@@ -3,14 +3,21 @@
 ## E: Extract
 Two original data sources:
 (1) * One formatted in a CSV file, poverty per county (file in Resources folder) from https://www2.census.gov/programs-surveys/saipe/datasets/time-series/model-tables/
-(2) * One extracted from API, income per capita (US BEA)
+(2) * One extracted from API, income per capita by county (US Bureau of Economics Analysis).  Method request is in JSON format, https://apps.bea.gov/api/data/?UserID=Your-36CharacterKey&method=GetData&datasetname=Regional&TableName=CAINC1&LineCode=
+3&Year=2017&GeoFips=COUNTY&ResultFormat=json
 
 For both of them we did the following imports using a jupyter notebook:
 ```python
+(1) Dependencies and setup for extracting the CSV file
 import pandas as pd
 from sqlalchemy import create_engine
 from config import pwd
 import psycopg2
+
+(2) Dependencies for extracting the database API
+All items in (1) above + the following
+import json
+from config import api_key
 ```
 
 ### (1) Store CSV into DataFrame
