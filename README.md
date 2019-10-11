@@ -22,8 +22,6 @@ from config import api_key
 ```
 
 ### (1) Store CSV into DataFrame
-
-
 ```python
 csv_file = "Resources/allpovu.csv"
 data_df = pd.read_csv(csv_file)
@@ -537,7 +535,7 @@ engine.table_names()
 ```
     ['poverty', 'co_income']
 
-* Use pandas to load csv converted DataFrame into database
+* Use pandas to load csv and data API converted DataFrame into database
 
 ```python
 poverty_df.to_sql(name='poverty', con=engine, if_exists='append', index=False)
@@ -547,7 +545,7 @@ co_income.to_sql(name='co_income', con=engine, if_exists='append', index=True)
 ```python
 pd.read_sql_query('select * from poverty', con=engine).head()
 ```
-
+* Join both tables on county name and state name
 ```ruby
 SELECT co_income.id, co_income.state, co_income.county, co_income.p_c_p_income, poverty.poverty_population
 FROM poverty
