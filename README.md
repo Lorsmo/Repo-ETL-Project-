@@ -1,21 +1,22 @@
 # Project ETL Report
 
 ## E: Extract
-Two original data sources:
-(1) * One formatted in a CSV file, poverty per county (file in Resources folder) from https://www2.census.gov/programs-surveys/saipe/datasets/time-series/model-tables/
-(2) * One extracted from API, income per capita by county (US Bureau of Economics Analysis).  Method request is in JSON format, https://apps.bea.gov/api/data/?UserID=Your-36CharacterKey&method=GetData&datasetname=Regional&TableName=CAINC1&LineCode=
-3&Year=2017&GeoFips=COUNTY&ResultFormat=json
+Two original data sources:</br>
+(1) One formatted in a CSV file, poverty per county (file in Resources folder) from</br> https://www2.census.gov/programs-surveys/saipe/datasets/time-series/model-tables/</br>
+(2) One extracted from API, income per capita by county (US Bureau of Economics Analysis).  Method request is in JSON format</br>https://apps.bea.gov/api/data/UserID=Your36CharacterKey&method=GetData&datasetname=Regional&TableName=CAINC1&LineCode=3&Year=2017&GeoFips=COUNTY&ResultFormat=json</br>
 
-For both of them we did the following imports using a jupyter notebook:
-```python
+For both of them we did the following imports using a jupyter notebook:</br>
+
 (1) Dependencies and setup for extracting the CSV file
+```python
 import pandas as pd
 from sqlalchemy import create_engine
 from config import pwd
 import psycopg2
-
-(2) Dependencies for extracting the database API
+```
+(2) Dependencies for extracting the database API</br>
 All items in (1) above + the following
+```python
 import json
 from config import api_key
 ```
@@ -28,9 +29,6 @@ csv_file = "Resources/allpovu.csv"
 data_df = pd.read_csv(csv_file)
 data_df.head()
 ```
-
-
-
 
 <table border="1" class="dataframe">
   <thead>
@@ -186,6 +184,153 @@ data_df.head()
 </div>
 
 ### (2) Extract API into DataFrame
+```python
+url = "https://apps.bea.gov/api/data/?UserID=" + api_key + "&method=GetData&datasetname=Regional&TableName=CAINC1&LineCode=3&Year=2017&GeoFips=COUNTY&ResultFormat=json"
+response = requests.get(query_url).json()
+df = pd.DataFrame(response['BEAAPI']['Results']['Data'])
+df
+```
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Code</th>
+      <th>GeoFips</th>
+      <th>GeoName</th>
+      <th>TimePeriod</th>
+      <th>CL_UNIT</th>
+      <th>UNIT_MULT</th>
+      <th>DataValue</th>
+      <th>NoteRef</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>CAINC1-3</td>
+      <td>00000</td>
+      <td>United States</td>
+      <td>2017</td>
+      <td>Dollars</td>
+      <td>0</td>
+      <td>51,640</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>CAINC1-3</td>
+      <td>01000</td>
+      <td>Alabama</td>
+      <td>2017</td>
+      <td>Dollars</td>
+      <td>0</td>
+      <td>40,805</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>CAINC1-3</td>
+      <td>01001</td>
+      <td>Autauga, AL</td>
+      <td>2017</td>
+      <td>Dollars</td>
+      <td>0</td>
+      <td>40,484</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>CAINC1-3</td>
+      <td>01003</td>
+      <td>Baldwin, AL</td>
+      <td>2017</td>
+      <td>Dollars</td>
+      <td>0</td>
+      <td>44,079</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>CAINC1-3</td>
+      <td>01005</td>
+      <td>Barbour, AL</td>
+      <td>2017</td>
+      <td>Dollars</td>
+      <td>0</td>
+      <td>33,453</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <td>3193</td>
+      <td>CAINC1-3</td>
+      <td>94000</td>
+      <td>Plains</td>
+      <td>2017</td>
+      <td>Dollars</td>
+      <td>0</td>
+      <td>49,174</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>3194</td>
+      <td>CAINC1-3</td>
+      <td>95000</td>
+      <td>Southeast</td>
+      <td>2017</td>
+      <td>Dollars</td>
+      <td>0</td>
+      <td>45,198</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>3195</td>
+      <td>CAINC1-3</td>
+      <td>96000</td>
+      <td>Southwest</td>
+      <td>2017</td>
+      <td>Dollars</td>
+      <td>0</td>
+      <td>45,834</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>3196</td>
+      <td>CAINC1-3</td>
+      <td>97000</td>
+      <td>Rocky Mountain</td>
+      <td>2017</td>
+      <td>Dollars</td>
+      <td>0</td>
+      <td>49,265</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>3197</td>
+      <td>CAINC1-3</td>
+      <td>98000</td>
+      <td>Far West</td>
+      <td>2017</td>
+      <td>Dollars</td>
+      <td>0</td>
+      <td>57,748</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>3198 rows × 8 columns</p>
+</div>
+
 
 
 
