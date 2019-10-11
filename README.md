@@ -417,9 +417,84 @@ poverty_df['Name'] = poverty_df['Name'].apply(remove_county)
 ```python
 poverty_df['poverty_population'] = poverty_df['poverty_population'].astype(str).str.replace(',', '')
 ```
+### (2) Income data
+* Split the 'GeoName' column in order to get one column 'County' with only the county name inside and anoter one with the state 
+```python
+df = df.join(df["GeoName"].str.split(", ", 1, expand=True).rename(columns={0:'County', 1:'State Abbr'}))
+df["County"] = df["County"].str.replace("County", "")
+```
+* Keep only the columns we are interested in
+```python
+co_income = df.loc[:, ["State Abbr", "County", "DataValue", "GeoFips"]]
+```
+* Rename the columns
+```python
+co_income.rename(columns={"DataValue": "p_c_p_income", "GeoFips": "id", "State Abbr": "state", "County": "county"}, inplace=True)
+```
+* Clean the data, delete empty cells and replace comma with space
+```python
+co_income = co_income[co_income["state"].astype(str) != "None"]
+co_income.dropna(inplace=True)
+co_income = co_income.loc[co_income['p_c_p_income']!='(NA)']
+co_income['p_c_p_income'] = co_income['p_c_p_income'].astype(str).str.replace(',', '')
+```
+* Set index on id
+```python
+co_income.set_index("id", inplace=True)
+co_income.head()
+```
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>state</th>
+      <th>county</th>
+      <th>p_c_p_income</th>
+    </tr>
+    <tr>
+      <th>id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>01001</td>
+      <td>AL</td>
+      <td>Autauga</td>
+      <td>40484</td>
+    </tr>
+    <tr>
+      <td>01003</td>
+      <td>AL</td>
+      <td>Baldwin</td>
+      <td>44079</td>
+    </tr>
+    <tr>
+      <td>01005</td>
+      <td>AL</td>
+      <td>Barbour</td>
+      <td>33453</td>
+    </tr>
+    <tr>
+      <td>01007</td>
+      <td>AL</td>
+      <td>Bibb</td>
+      <td>30022</td>
+    </tr>
+    <tr>
+      <td>01009</td>
+      <td>AL</td>
+      <td>Blount</td>
+      <td>33707</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 
-# Load: the final database, tables/collections, and why this was chosen.
+# L: Load
 
 ### Connect to local database
 
