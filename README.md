@@ -496,27 +496,46 @@ co_income.head()
 
 # L: Load
 
-### Connect to local database
+* Create tables in SQL (database) in order to receive the data from DataFrame
+```ruby
+-- DROP TABLE public.poverty;
 
+CREATE TABLE public.poverty
+(
+    id integer NOT NULL DEFAULT nextval('poverty_id_seq'::regclass),
+    state_fips_code integer NOT NULL,
+    county_fips_code integer NOT NULL,
+    name_county character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    state_abbr character varying(3) COLLATE pg_catalog."default" NOT NULL,
+    poverty_population character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT poverty_pkey PRIMARY KEY (id)
+);
+```
+```ruby
+-- DROP TABLE public.co_income;
 
-```python
-rds_connection_string = f"postgres:{pwd}@localhost:5432/poverty_db"
-
-engine = create_engine(f'postgresql://{rds_connection_string}')
-
+CREATE TABLE public.co_income
+(
+    id text COLLATE pg_catalog."default" NOT NULL,
+    state text COLLATE pg_catalog."default",
+    county text COLLATE pg_catalog."default",
+    p_c_p_income integer,
+    CONSTRAINT co_income_pkey PRIMARY KEY (id)
+);
 ```
 
-### Check for tables
+* Connect to local database
 
+```python
+connection_string = f"postgres:{pwd}@localhost:5432/ETL"
+engine = create_engine(f'postgresql://{connection_string}')
+```
 
+* Check for tables
 ```python
 engine.table_names()
 ```
-
-
-
-
-    ['poverty']
+    ['poverty', 'co_income']
 
 
 
