@@ -546,11 +546,80 @@ co_income.to_sql(name='co_income', con=engine, if_exists='append', index=True)
 pd.read_sql_query('select * from poverty', con=engine).head()
 pd.read_sql_query('select * from co_income', con=engine).head()
 ```
-* Join both tables on county name and state name
+* Join both tables on county name and state name:</br>
+  In PgAdmin:
 ```ruby
 SELECT co_income.id, co_income.state, co_income.county, co_income.p_c_p_income, poverty.poverty_population
 FROM poverty
 JOIN co_income ON
 poverty.state_abbr=co_income.state and poverty.name_county=co_income.county;
 ```
+  In Pandas:
+```python
+sql_join = r"""SELECT co_income.id, co_income.state, co_income.county, co_income.p_c_p_income, poverty.poverty_population 
+            FROM poverty
+            JOIN co_income
+            ON poverty.state_abbr=co_income.state
+            AND poverty.name_county=co_income.county;"""
+
+res = pd.read_sql(sql_join, con=engine)
+res.head()
+```
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>state</th>
+      <th>county</th>
+      <th>p_c_p_income</th>
+      <th>poverty_population</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>01001</td>
+      <td>AL</td>
+      <td>Autauga</td>
+      <td>40484</td>
+      <td>55021</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>01003</td>
+      <td>AL</td>
+      <td>Baldwin</td>
+      <td>44079</td>
+      <td>209922</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>01005</td>
+      <td>AL</td>
+      <td>Barbour</td>
+      <td>33453</td>
+      <td>22224</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>01007</td>
+      <td>AL</td>
+      <td>Bibb</td>
+      <td>30022</td>
+      <td>20434</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>01009</td>
+      <td>AL</td>
+      <td>Blount</td>
+      <td>33707</td>
+      <td>57452</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
 
