@@ -1,8 +1,8 @@
 # Project ETL Report
 
-1. We use pandas to extract and transform because they allow us to check results on every steps along the way especially with extracting api database.</br>
-2. SQL, however, is familiar to broader users who may find it easier to filter and select specific columns for display and apply function to values which we normally see in these types of variables.  In addition, it is easier to observe all data in a table in SQL whereas some data of a big data set may be truncated in the middle of the set.</br>
-3. We created this database to observe poverty and per capital income by county.  On technical purpose, the data have big enough number of observations by county and are available in various formats that allow us more opportunities to exhibit extract, transform, and load them.  On the economic purpose, SQL helps us get only relevant columns to study the topic and helps us slice the data in various ways for a quick glance.</br>
+1. We use pandas to extract and transform because they allow us to check results on every step along the way especially with extracting api database.</br>
+2. SQL, however, is familiar to broader users who may find it easier to filter and select specific columns for display and apply function to values which we normally see in these types of variables.  In addition, it is easier to observe all data in a table in SQL whereas some data of a big data set may be truncated in the middle of a pandas data frame display..</br>
+3. We created this database to observe poverty and per capital income by county.  On technical purpose, the data have a big enough number of observations by county and are available in various formats that allow us more opportunities to exhibit extract, transform, and load them.  On the economic purpose, SQL helps us get only relevant columns to study the topic and helps us slice the data in various ways for a quick glance.</br>
 
 ## E: Extract
 Two original data sources:</br>
